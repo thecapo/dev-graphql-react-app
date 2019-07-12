@@ -1,0 +1,93 @@
+enum Permission {
+  ADMIN
+  USER
+  DEVCREATE
+  DEVUPDATE
+  DEVDELETE
+  PERMISSIONUPDATE
+}
+
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  password: String!
+  avatar: String
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: [Permission] @scalarList(strategy: RELATION)
+  postsLiked: [Post!]! @relation(name: "UserLikes")
+  commentsMade: [Comments!]! @relation(name: "UserComments")
+  userPosts: [Post!]! @relation(name: "UserPosts")
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Post {
+  id: ID! @id
+  text: String!
+  name: String!
+  avatar: String
+  likes: [User!]! @relation(name: "UserLikes")
+  comments: [Comments!]! @relation(name: "CommentToPost")
+  user: User! @relation(name: "UserPosts")
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Comments {
+  id: ID! @id
+  user: [User!] @relation(name: "UserComments")
+  commentInPost: [Post!]! @relation(name: "CommentToPost")
+  text: String!
+  name: String
+  avatar: String
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Profile {
+  id: ID! @id
+  handle: String
+  company: String
+  website: String
+  location: String
+  status: String
+  skills: String
+  bio: String
+  githubusername: String
+  experience: [Experience!]! 
+  education: [Education!]! 
+  youtube: String
+  twitter: String
+  facebook: String
+  linkedin: String
+  instagram: String
+  user: User!
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Experience {
+  id: ID! @id
+  title: String!
+  company: String!
+  location: String
+  from: DateTime!
+  to: DateTime
+  isCurrent: Boolean! 
+  description: String
+}
+
+type Education {
+  id: ID! @id
+  school: String!
+  degree: String!
+  fieldofstudy: String!
+  from: DateTime!
+  to: DateTime
+  current: Boolean! @default(value: false)
+  description: String
+}
+
+
